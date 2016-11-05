@@ -47,7 +47,7 @@ def get_page_links(bs_obj):
 
 def crawler(url, all_link='n'):
     response = ''
-    too_much = 'n'
+    too_much = ''
     page_links = []
 
     try:
@@ -106,14 +106,17 @@ def crawler(url, all_link='n'):
                     if image_link:
                         download_image(image_link, image_name)
 
-                    if len(downloaded_images) >= 50 and too_much == 'n':
-                        too_much = input('Too much images. Want to continue? <y or n> : ').strip() or 'y'
+                    if len(downloaded_images) >= 5 and too_much == '':
+                        too_much = input('Too much images. Want to stop ? <y or n> : ').strip() or 'y'
                         if too_much[0] not in ['y', 'Y', 'n', 'N']:
                             too_much = 'y'
 
+                    if too_much in ['y', 'Y']:
+                        exit()
+
 
 url = input('Enter a url: ').strip()
-visit_all = input('Want to visit sub-pages? <y or n> : ').strip() or 'n'
+visit_all = input('Want to visit sub-pages? <n or y> : ').strip() or 'n'
 
 if visit_all[0] not in ['y', 'Y', 'n', 'N']:
     visit_all = 'n'
