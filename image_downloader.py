@@ -106,7 +106,7 @@ def crawler(url, all_link='n'):
                     if image_link:
                         download_image(image_link, image_name)
 
-                    if len(downloaded_images) >= 5 and too_much == '':
+                    if len(downloaded_images) >= 50 and too_much == '':
                         too_much = input('Too much images. Want to stop ? <y or n> : ').strip() or 'y'
                         if too_much[0] not in ['y', 'Y', 'n', 'N']:
                             too_much = 'y'
