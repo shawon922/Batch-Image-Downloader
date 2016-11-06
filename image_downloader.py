@@ -1,18 +1,18 @@
-import requests
-from bs4 import BeautifulSoup as BS
+import datetime
+import os
 import re
 import urllib.request as ulib
-import os
-import datetime
 
+import requests
+from bs4 import BeautifulSoup as BS
 
 headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36',
-    }
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
+}
 
 now = datetime.datetime.now()
 
-today = str(datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)).replace(' ', '_').replace(':', '_');
+today = str(datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)).replace(' ', '_').replace(':', '_')
 
 
 def download_image(image_link, image_name):
