@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 import urllib.request as ulib
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from bs4 import BeautifulSoup as BS
@@ -83,36 +84,37 @@ def crawler(url, all_link='n'):
             if len(image_srcs) > 0:
                 os.makedirs(today, exist_ok=True)
 
-            for image_src in image_srcs:
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                for image_src in image_srcs:
 
-                if image_src not in downloaded_images:
-                    downloaded_images.append(image_src)
+                    if image_src not in downloaded_images:
+                        downloaded_images.append(image_src)
 
-                    image_name = str(image_src.split('/')[-1]).split('?')[0]
+                        image_name = str(image_src.split('/')[-1]).split('?')[0]
 
-                    if (re.match('http://', image_src) or re.match('https://', image_src)) and (
-                        re.search('.png', image_src) or re.search('.jpg', image_src)):
-                        image_link = image_src
-                        print(image_link)
-                    elif re.search('.png', image_src):
-                        image_link = url + image_src
-                        print(image_link)
-                    elif re.search('.jpg', image_src):
-                        image_link = url + image_src
-                        print(image_link)
-                    else:
-                        image_link = ''
+                        if (re.match('http://', image_src) or re.match('https://', image_src)) and (
+                            re.search('.png', image_src) or re.search('.jpg', image_src)):
+                            image_link = image_src
+                            print(image_link)
+                        elif re.search('.png', image_src):
+                            image_link = url + image_src
+                            print(image_link)
+                        elif re.search('.jpg', image_src):
+                            image_link = url + image_src
+                            print(image_link)
+                        else:
+                            image_link = ''
 
-                    if image_link:
-                        download_image(image_link, image_name)
+                        if image_link:
+                            executor.submit(download_image, image_link, image_name)
 
-                    if len(downloaded_images) >= 50 and too_much == '':
-                        too_much = input('Too much images. Want to stop ? <y or n> : ').strip() or 'y'
-                        if too_much[0] not in ['y', 'Y', 'n', 'N']:
-                            too_much = 'y'
+                        if len(downloaded_images) >= 50 and too_much == '':
+                            too_much = input('Too much images. Want to stop ? <y or n> : ').strip() or 'y'
+                            if too_much[0] not in ['y', 'Y', 'n', 'N']:
+                                too_much = 'y'
 
-                    if too_much in ['y', 'Y']:
-                        exit()
+                        if too_much in ['y', 'Y']:
+                            exit()
 
 
 url = input('Enter a url: ').strip()
