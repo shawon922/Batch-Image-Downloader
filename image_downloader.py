@@ -24,7 +24,7 @@ def download_image(image_link, image_name):
 def get_image_src(link):
     try:
         response = requests.get(link, headers=headers)
-    except:
+    except (IOError, requests.ConnectionError, requests.HTTPError):
         print('Exception....')
         return []
 
@@ -52,7 +52,7 @@ def crawler(url, all_link='n'):
 
     try:
         response = requests.get(url, headers=headers)
-    except:
+    except (IOError, requests.ConnectionError, requests.HTTPError):
         print('Invalid link..')
         exit()
 
