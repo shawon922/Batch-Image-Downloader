@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup as BS
 
 import pyperclip
 import sys
+from urllib.parse import urlparse
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
@@ -127,18 +128,32 @@ cmd arg or not. If both conditions fail, proceed to ask the
 use for input. (Makes the program convenient)
 """
 
-clip_text = pyperclip.paste()
 
-# asks for the choice since url will be there
-if len(clip_text) > 0 and len(sys.argv) == 1:
-    visit_all = input('Want to visit sub-pages? <n or y> : ').strip() or 'n'
+# used for validating url
+def validate_url(url_link):
+    parsed_url = urlparse(url_link)
+
+    if not parsed_url.scheme and not parsed_url.netloc:
+        return False
+    else:
+        return True
 
 
-# both are present
-elif not clip_text and len(sys.argv > 1):
-    url = clip_text
+def get_validated_url_from_clip():
+    paste_data = pyperclip.paste()
+
+    if validate_url(paste_data):
+        return paste_data
+    else:
+        return ''
+
+
+validated_url = get_validated_url_from_clip()
+
+# checks if clipboard has something and also a cmd arg
+if validated_url and len(sys.argv) == 2:
+    url = validated_url
     visit_all = sys.argv[1]
-
 
 # ask for user input, none are present
 else:
