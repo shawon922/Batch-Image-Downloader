@@ -7,6 +7,9 @@ from concurrent.futures import ThreadPoolExecutor
 import requests
 from bs4 import BeautifulSoup as BS
 
+import pyperclip
+import sys
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
 }
@@ -66,7 +69,7 @@ def crawler(url, all_link='n'):
     page_links.append(url)
 
     if all_link in ['y', 'Y']:
-        page_links.extend(get_page_links())
+        page_links.extend(get_page_links(beautiful_obj))
 
     visited_links = []
     downloaded_images = []
@@ -117,9 +120,33 @@ def crawler(url, all_link='n'):
                             exit()
 
 
-url = input('Enter a url: ').strip()
-visit_all = input('Want to visit sub-pages? <n or y> : ').strip() or 'n'
+"""
+Use the system clipboard, get the copied link,
+check if it's empty or not. Also check if there's any
+cmd arg or not. If both conditions fail, proceed to ask the
+use for input. (Makes the program convenient)
+"""
 
+clip_text = pyperclip.paste()
+
+# asks for the choice since url will be there
+if len(clip_text) > 0 and len(sys.argv) == 1:
+    visit_all = input('Want to visit sub-pages? <n or y> : ').strip() or 'n'
+
+
+# both are present
+elif not clip_text and len(sys.argv > 1):
+    url = clip_text
+    visit_all = sys.argv[1]
+
+
+# ask for user input, none are present
+else:
+    url = input('Enter a url: ').strip()
+    visit_all = input('Want to visit sub-pages? <n or y> : ').strip() or 'n'
+
+
+# check the url and visit_all var
 if visit_all[0] not in ['y', 'Y', 'n', 'N']:
     visit_all = 'n'
 
@@ -127,4 +154,3 @@ if url[-1] != '/':
     url += '/'
 
 crawler(url, visit_all[0])
-
