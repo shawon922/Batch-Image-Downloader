@@ -1,0 +1,7 @@
+#Log - 1 : Nov 9, 2016
+
+  1. Added feature to get the link from clipboard
+  2. At line 72, bs object was missing to function call, fixed that
+  3. added an url validator
+  4. Updated the readme
+  5. added .gitignore
