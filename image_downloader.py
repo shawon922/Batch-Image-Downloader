@@ -62,7 +62,7 @@ def crawler(url, all_link='n'):
         exit()
 
     if response.status_code != 200:
-        print('Bad status code : '+ response.status_code)
+        print('Bad status code : %s' % response.status_code)
         exit()
 
     beautiful_obj = BS(response.content, 'html.parser')
